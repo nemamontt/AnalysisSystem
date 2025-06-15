@@ -1,0 +1,160 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:DatabaseAggregator.View"
+             x:Class="DatabaseAggregator.View.SettingView"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             DataContext="{DynamicResource SVM}">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBox}"
+               x:Key="staticTextBox">
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius"
+                            Value="5" />
+                </Style>
+            </Style.Resources>
+            <Setter Property="FontSize"
+                    Value="20" />
+            <Setter Property="Margin"
+                    Value="2" />
+            <Setter Property="Cursor"
+                    Value="IBeam" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="45" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70*" />
+            <ColumnDefinition Width="70*" />
+            <ColumnDefinition Width="583*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   Grid.RowSpan="2"
+                   Text="NVD"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontSize="20" />
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="1"
+                   Text="URL:"
+                   FontSize="15"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center" />
+
+        <TextBlock Grid.Row="1"
+                   Grid.Column="1"
+                   Text="API-KEY:"
+                   FontSize="15"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center" />
+
+        <TextBox Grid.Row="0"
+                 Grid.Column="2"
+                 Style="{StaticResource staticTextBox}"
+                 Text="{Binding Config.UrlNVD}"
+                 TextWrapping="Wrap" />
+
+
+        <TextBox Grid.Row="1"
+                 Grid.Column="2"
+                 Style="{StaticResource staticTextBox}"
+                 Text="{Binding Config.ApiKeyNVD}"
+                 TextWrapping="Wrap" />
+
+        <TextBox Grid.Row="2"
+                 Grid.Column="2"
+                 Style="{StaticResource staticTextBox}"
+                 Text="{Binding Config.UrlFSTEC}"
+                 TextWrapping="Wrap" />
+
+        <TextBox Grid.Row="3"
+                 Grid.Column="2"
+                 Style="{StaticResource staticTextBox}"
+                 Text="{Binding Config.UrlJVN}"
+                 TextWrapping="Wrap" />
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="0"
+                   Text="FSTEC"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontSize="20" />
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="1"
+                   Text="URL:"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontSize="15" />
+
+        <TextBlock Grid.Row="3"
+                   Grid.Column="0"
+                   Text="JVN"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontSize="20" />
+
+        <TextBlock Grid.Row="3"
+                   Grid.Column="1"
+                   Text="URL:"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontSize="15" />
+
+        <Button Grid.Row="4"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                FontSize="17"
+                FontFamily="Verdana"
+                Margin="2"
+                Cursor="Hand"
+                Command="{Binding SaveData, Mode=OneWay}"
+                Content="Сохранить настройки">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius"
+                            Value="5" />
+                </Style>
+            </Button.Resources>
+        </Button>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="3"
+                   FontSize="15"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center" />
+
+        <TextBlock Grid.Row="1"
+                   Grid.Column="3"
+                   FontSize="15"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center" />
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="3"
+                   FontSize="15"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center" />
+
+        <TextBlock Grid.Row="3"
+                   Grid.Column="3"
+                   FontSize="15"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center" />
+    </Grid>
+</UserControl>

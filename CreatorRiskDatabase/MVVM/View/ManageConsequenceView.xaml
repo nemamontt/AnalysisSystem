@@ -1,0 +1,122 @@
+﻿<Window x:Class="CreatorOutcomesDatabase.MVVM.View.ManageConsequenceView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CreatorOutcomesDatabase.MVVM.View"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Height="600"
+        Width="450">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="0.4*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal">
+            <TextBlock Text="Номер негативного последствия:"
+                       FontSize="15"
+                       FontFamily="Consolas"
+                       Margin="1"
+                       VerticalAlignment="Center" />
+            <TextBox Width="70"
+                     Margin="1" 
+                     MaxLength="4"
+                     PreviewTextInput="NumberPreviewTextInput"
+                     Name="Number"/>
+        </StackPanel>
+
+        <TextBlock Grid.Row="1"
+                   Text="Наименование негативного последсвтия:"
+                   FontSize="15"
+                   FontFamily="Consolas"
+                   Margin="1" />
+
+        <TextBox Grid.Row="2"
+                 Margin="1"
+                 FontSize="15"
+                 FontFamily="Consolas"
+                 Name="Name"
+                 TextWrapping="Wrap"/>
+
+        <TextBlock Grid.Row="3"
+                   Text="Ущерб:"
+                   FontSize="15"
+                   FontFamily="Consolas"
+                   Margin="1" />
+
+        <TextBox Grid.Row="4"
+                 Margin="1"
+                 FontSize="15"
+                 FontFamily="Consolas" 
+                 Name="Damage"
+                 TextWrapping="Wrap"/>
+
+        <TextBlock Grid.Row="5"
+                   Text="Добавление номеров угроз:"
+                   FontSize="15"
+                   FontFamily="Consolas"
+                   Margin="1" />
+
+        <StackPanel Grid.Row="6"
+                    Orientation="Horizontal">
+            <TextBox FontSize="15"
+                     FontFamily="Consolas"
+                     Margin="1"
+                     Width="70" 
+                     MaxLength="4"
+                     PreviewTextInput="NumberPreviewTextInput"
+                     Name="NamberThreat"/>
+            <Button  Margin="1"
+                     Width="70"
+                     Click="PlusButtonClick"
+                     Cursor="Hand">
+                <TextBlock FontSize="35"
+                           Text="+"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+            </Button>
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="7"
+                    Orientation="Horizontal">
+            <ComboBox Margin="1"
+                      Width="70"
+                      FontSize="15"
+                      FontFamily="Consolas" 
+                      Name="ThreatList"/>
+            <Button  Margin="1"
+                     Width="70"
+                     Click="MinusButtonClick"
+                     Cursor="Hand">
+                <TextBlock FontSize="35"
+                           Text="-"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+            </Button>
+        </StackPanel>
+        
+        <Button Grid.Row="9"
+                Margin="1"
+                Click="ApplyButtonClick">
+            <TextBlock Text="Применить"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="20"
+                       FontFamily="Consolas"
+                       Cursor="Hand"/>
+        </Button>
+    </Grid>
+</Window>

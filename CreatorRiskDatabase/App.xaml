@@ -1,0 +1,13 @@
+﻿<Application x:Class="CreatorOutcomesDatabase.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:CreatorOutcomesDatabase"
+             xmlns:vm="clr-namespace:CreatorOutcomesDatabase.MVVM.ViewModel"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             StartupUri="MVVM/View/MainWindow.xaml">
+    <Application.Resources>
+        <vm:MainViewModel x:Key="MVM" />
+        <sys:Boolean x:Key="TrueValue">true</sys:Boolean>
+        <sys:Boolean x:Key="FalseValue">false</sys:Boolean>
+    </Application.Resources>
+</Application>

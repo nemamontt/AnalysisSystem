@@ -1,0 +1,96 @@
+﻿<Window x:Class="CreatorOutcomesDatabase.MVVM.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:view="clr-namespace:CreatorOutcomesDatabase.MVVM.View"
+        xmlns:vm="clr-namespace:CreatorOutcomesDatabase.MVVM.ViewModel"
+        mc:Ignorable="d"
+        Title="Модуль формирования базы данных рисков специализированных средств v 1.0.0"
+        Height="450"
+        Width="800"
+        MinHeight="600"
+        MinWidth="800"
+        WindowStartupLocation="CenterScreen"
+        DataContext="{DynamicResource MVM}">
+
+    <Window.Resources>
+        <Style x:Key="HeadingTextBlock"
+               TargetType="TextBlock">
+            <Setter Property="TextWrapping"
+                    Value="Wrap" />
+            <Setter Property="FontSize"
+                    Value="15" />
+            <Setter Property="FontWeight"
+                    Value="Bold" />
+        </Style>
+        <Style x:Key="DynamicTextBlock"
+               TargetType="TextBlock">
+            <Setter Property="TextWrapping"
+                    Value="Wrap" />
+            <Setter Property="FontSize"
+                    Value="15" />
+        </Style>
+        <Style x:Key="Button"
+               TargetType="Button">
+            <Setter Property="Width"
+                    Value="100" />
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="Cursor"
+                    Value="Hand" />
+            <Setter Property="FontSize"
+                    Value="12" />
+            <Setter Property="FontFamily"
+                    Value="Consolas" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border BorderBrush="Black"
+                BorderThickness="1"
+                Padding="2"
+                Grid.Row="0"
+                Margin="5">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+
+                <Button Style="{StaticResource Button}"
+                        Command="{Binding SetCurrentView}"
+                        CommandParameter="{Binding TechnView}">
+                    <TextBlock Text="Технологии оценки риска"
+                               TextWrapping="Wrap" />
+                </Button>
+
+                <Button Style="{StaticResource Button}"
+                        Command="{Binding SetCurrentView}"
+                        CommandParameter="{Binding ConsView}">
+                    <TextBlock Text="Негативные последствия"
+                               TextWrapping="Wrap" />
+                </Button>
+
+                <Button Style="{StaticResource Button}"
+                        Content="Открыть"
+                        Command="{Binding OpenFile}" />
+
+                <Button Style="{StaticResource Button}"
+                        Content="Сохранить"
+                        Command="{Binding SaveFile}" />
+
+            </StackPanel>
+        </Border>
+
+        <Border BorderBrush="Black"
+                BorderThickness="1"
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Margin="5">
+            <ContentControl Content="{Binding CurrentView}" />
+        </Border>
+    </Grid>
+</Window>

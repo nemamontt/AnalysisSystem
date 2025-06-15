@@ -1,0 +1,163 @@
+﻿<Window x:Class="CreatorProtectionMeasuresDatabase.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CreatorProtectionMeasuresDatabase"
+        mc:Ignorable="d"
+        Title="Модуль формирования базы данных мер защиты специализированных средств v 1.0"
+        Height="450" 
+        Width="800"
+        MinHeight="450"
+        MinWidth="800"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="HeadingTextBlock"
+               TargetType="TextBlock">
+            <Setter Property="TextWrapping"
+                    Value="Wrap" />
+            <Setter Property="FontSize"
+                    Value="15" />
+            <Setter Property="FontWeight"
+                    Value="Bold" />
+        </Style>
+        <Style x:Key="DynamicTextBlock"
+               TargetType="TextBlock">
+            <Setter Property="TextWrapping"
+                    Value="Wrap" />
+            <Setter Property="FontSize"
+                    Value="15" />
+        </Style>
+        <Style x:Key="Button"
+               TargetType="Button">
+            <Setter Property="Width"
+                    Value="100" />
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="Cursor"
+                    Value="Hand" />
+            <Setter Property="FontSize"
+                    Value="15" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="60" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border BorderBrush="Black"
+                        BorderThickness="1"
+                        Grid.Column="0"
+                        Margin="5">
+                    <ListBox ItemsSource="{Binding ProtectionMeasures, Mode=OneWay}"
+                             FontSize="{Binding FontSize, Mode=OneWay}"
+                             VirtualizingStackPanel.IsVirtualizing="True"
+                             VirtualizingStackPanel.VirtualizationMode="Recycling"
+                             SelectedItem="{Binding SelectedItemListBox}"
+                             Name="ProtMesListBox">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+
+                <GridSplitter Grid.Column="1"
+                              HorizontalAlignment="Center"
+                              Width="5"
+                              Margin="0 5 0 5" />
+
+                <Border BorderBrush="Black"
+                        BorderThickness="1"
+                        Grid.Column="2"
+                        Margin="5">
+                    <Grid Margin="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="Наименование группы мер защиты:"
+                                   Style="{StaticResource HeadingTextBlock}" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="0"
+                                   Text="Наименование меры защиты:"
+                                   Style="{StaticResource HeadingTextBlock}" />
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
+                                   Text="Классы защищенности автоматизированной системы управления:"
+                                   Style="{StaticResource HeadingTextBlock}" />
+
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="1"
+                                   Text="{Binding SelectedItem.NameGroup, 
+                                ElementName=ProtMesListBox}"
+                                   Style="{StaticResource DynamicTextBlock}" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="1"
+                                   Text="{Binding SelectedItem.Description, 
+                                ElementName=ProtMesListBox}"
+                                   Style="{StaticResource DynamicTextBlock}" />
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="1"
+                                   Text="{Binding SelectedItem.SecurityClasses, 
+                                ElementName=ProtMesListBox}"
+                                   Style="{StaticResource DynamicTextBlock}" />
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Border BorderBrush="Black"
+                    BorderThickness="1"
+                    Padding="2"
+                    Grid.Row="1"
+                    Margin="5">
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+
+                    <Button Style="{StaticResource Button}"
+                            Content="Открыть"
+                            Name="OpenButton" />
+
+                    <Button Style="{StaticResource Button}"
+                            Content="Сохранить"
+                            Name="SaveButton"
+                            IsEnabled="False" />
+
+                    <Button Style="{StaticResource Button}"
+                            Content="Добавить"
+                            Name="AddButton" />
+
+                    <Button Style="{StaticResource Button}"
+                            Content="Удалить"
+                            Name="DeleteButton"
+                            IsEnabled="False" />
+
+                    <Button Style="{StaticResource Button}"
+                            Content="Изменить"
+                            Name="ChangeButton"
+                            IsEnabled="False" />
+
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

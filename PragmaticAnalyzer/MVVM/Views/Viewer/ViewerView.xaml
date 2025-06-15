@@ -1,0 +1,120 @@
+﻿<UserControl x:Class="PragmaticAnalyzer.MVVM.Views.ViewerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             Height="650"
+             Width="1200">
+    <Canvas>
+        <Image Source="/Images/scheme.jpg"
+               Height="640"
+               Width="1200"
+               Canvas.Top="3" />
+        <Button Content="Специалист по ЗИ"
+                Cursor="Hand"
+                FontSize="17"
+                Command="{Binding OpenSpecialistViewCommand}"
+                Canvas.Left="1"
+                RenderTransformOrigin="0.5,0.5"
+                Height="44"
+                Width="208"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Canvas.Top="5">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="0.211" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
+        <Button Content="Меры защиты"
+                Cursor="Hand"
+                FontSize="17"
+                Command="{Binding OpenProtectionMeasureViewCommand}"
+                Canvas.Left="189"
+                Canvas.Top="79"
+                Height="44"
+                Width="209"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top" />
+        <Button Content="Уязвимости"
+                Cursor="Hand"
+                FontSize="17"
+                Command="{Binding OpenVulViewCommand}"
+                Canvas.Left="421"
+                Canvas.Top="153"
+                Height="45"
+                Width="208"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+        <Button Content="Нарушитель"
+                Cursor="Hand"
+                FontSize="17"
+                Command="{Binding OpenViolatorViewCommand}"
+                Canvas.Top="343"
+                Height="45"
+                Width="209"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top" />
+        <Button Content="Угрозы"
+                Cursor="Hand"
+                FontSize="17"
+                Command="{Binding OpenThredViewCommand}"
+                Canvas.Left="189"
+                Canvas.Top="419"
+                Height="43"
+                Width="209" />
+        <Button  Content="Техники и тактики"
+                 Cursor="Hand"
+                 FontSize="17"
+                 Command="{Binding OpenTacticViewCommand}"
+                 Canvas.Left="421"
+                 Canvas.Top="491"
+                 Height="44"
+                 Width="208"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center" />
+        <Button Content="Риски ИБ"
+                Cursor="Hand"
+                FontSize="17"
+                Command="{Binding OpenOutcomesViewCommand}"
+                Canvas.Left="695"
+                Canvas.Top="230"
+                Height="43"
+                Width="209" />
+        <Button Content="Эксплойты"
+                Cursor="Hand"
+                FontSize="17"
+                Command="{Binding OpenExploitViewCommand}"
+                Canvas.Left="676"
+                Canvas.Top="553"
+                Height="47"
+                Width="209"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top" />
+        <Button  Content="Данные о текущем состоянии ПФ СОПКА"
+                 Cursor="Hand"
+                 FontSize="12"
+                 Command="{Binding OpenReferenceStatusViewCommand}"
+                 Canvas.Left="923"
+                 Canvas.Top="405"
+                 Height="44"
+                 Width="277"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Top" />
+        <Button Content="Данные об эталонном состоянии ПФ СОПКА"
+                Cursor="Hand"
+                FontSize="10"
+                Command="{Binding }"
+                Canvas.Left="991"
+                Canvas.Top="159"
+                Height="50"
+                Width="209"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top" />
+    </Canvas>
+</UserControl>

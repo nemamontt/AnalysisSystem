@@ -1,0 +1,120 @@
+﻿<UserControl x:Class="PragmaticAnalyzer.MVVM.Views.ThreatView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:PragmaticAnalyzer.MVVM.Views"
+             xmlns:assist="clr-namespace:PragmaticAnalyzer.Assistant"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <assist:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <Style x:Key="Button"
+               TargetType="Button">
+            <Setter Property="Margin"
+                    Value="3" />
+            <Setter Property="FontSize"
+                    Value="15" />
+            <Setter Property="Cursor"
+                    Value="Hand" />
+        </Style>
+        <Style x:Key="HeadingTextBlock"
+               TargetType="TextBlock">
+            <Setter Property="FontSize"
+                    Value="15" />
+            <Setter Property="FontWeight"
+                    Value="Bold" />
+            <Setter Property="TextWrapping"
+                    Value="Wrap" />
+            <Setter Property="MinWidth"
+                    Value="1000" />
+        </Style>
+        <Style x:Key="DynamicTextBlock"
+               TargetType="TextBlock">
+            <Setter Property="FontSize"
+                    Value="15" />
+            <Setter Property="TextWrapping"
+                    Value="Wrap" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   Text="Идентификатор угрозы:"
+                   Margin="5"
+                   FontSize="15"
+                   FontFamily="Consolas" />
+        <ListBox  Grid.Row="1"
+                  Grid.Column="0"
+                  ItemsSource="{Binding Threats, Mode=OneWay}"
+                  FontSize="15"
+                  Margin="5"
+                  VirtualizingStackPanel.IsVirtualizing="True"
+                  VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  SelectedItem="{Binding SelectedThreat}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding IdentifierUBI}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Border Grid.Row="0"
+                Grid.Column="1"
+                Grid.RowSpan="2"
+                Margin="5"
+                BorderBrush="Black"
+                BorderThickness="1">
+            <ScrollViewer Visibility="{Binding SelectedThreat, Converter={StaticResource NullToVisibilityConverter}}">
+                <StackPanel Margin="5">
+                    <TextBlock Text="Наименование УБИ"
+                               Style="{StaticResource HeadingTextBlock}" />
+                    <TextBlock Text="{Binding SelectedThreat.Name}"
+                               Style="{StaticResource DynamicTextBlock}" />
+                    <TextBlock Text="Описание"
+                               Style="{StaticResource HeadingTextBlock}" />
+                    <TextBlock Text="{Binding SelectedThreat.Description}"
+                               Style="{StaticResource DynamicTextBlock}" />
+                    <TextBlock Text="Источник угрозы (характеристика и потенциал нарушителя)"
+                               Style="{StaticResource HeadingTextBlock}" />
+                    <TextBlock Text="{Binding SelectedThreat.Source}"
+                               Style="{StaticResource DynamicTextBlock}" />
+                    <TextBlock Text="Объект воздействия"
+                               Style="{StaticResource HeadingTextBlock}" />
+                    <TextBlock Text="{Binding SelectedThreat.ObjectInfluence}"
+                               Style="{StaticResource DynamicTextBlock}" />
+                    <TextBlock Text="Нарушение конфиденциальности"
+                               Style="{StaticResource HeadingTextBlock}" />
+                    <TextBlock Text="{Binding SelectedThreat.PrivacyViolation}"
+                               Style="{StaticResource DynamicTextBlock}" />
+                    <TextBlock Text="Нарушение целостности"
+                               Style="{StaticResource HeadingTextBlock}" />
+                    <TextBlock Text="{Binding SelectedThreat.IntegrityViolation}"
+                               Style="{StaticResource DynamicTextBlock}" />
+                    <TextBlock Text="Нарушение доступности"
+                               Style="{StaticResource HeadingTextBlock}" />
+                    <TextBlock Text="{Binding SelectedThreat.AccessibilityViolation}"
+                               Style="{StaticResource DynamicTextBlock}" />
+                    <TextBlock Text="Дата включения угрозы в БнД УБИ"
+                               Style="{StaticResource HeadingTextBlock}" />
+                    <TextBlock Text="{Binding SelectedThreat.DateInclusion}"
+                               Style="{StaticResource DynamicTextBlock}" />
+                    <TextBlock Text="Дата последнего изменения данных"
+                               Style="{StaticResource HeadingTextBlock}" />
+                    <TextBlock Text="{Binding SelectedThreat.DateChange}"
+                               Style="{StaticResource DynamicTextBlock}" />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>
