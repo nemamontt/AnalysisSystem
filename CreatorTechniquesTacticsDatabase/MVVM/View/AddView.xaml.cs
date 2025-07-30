@@ -36,6 +36,7 @@ namespace CreatorTechniquesTacticsDatabase.MVVM.View
                 OptionCheckBox.IsEnabled = false;
                 ListTechniqueComboBox.IsEnabled = false;
             }
+
             DoneButton.Click += (s, e) =>
             {
                 if (add)

@@ -7,7 +7,7 @@
              xmlns:assist="clr-namespace:PragmaticAnalyzer.Assistant"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="1000">
     <UserControl.Resources>
         <assist:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <Style x:Key="Button"
@@ -15,9 +15,11 @@
             <Setter Property="Margin"
                     Value="3" />
             <Setter Property="FontSize"
-                    Value="15" />
+                    Value="20" />
             <Setter Property="Cursor"
                     Value="Hand" />
+            <Setter Property="FontFamily"
+                    Value="Consolas" />
         </Style>
         <Style x:Key="HeadingTextBlock"
                TargetType="TextBlock">
@@ -43,10 +45,14 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="0.2*" />
         </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="0.1*" />
+            <RowDefinition Height="0.1*" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
@@ -55,24 +61,26 @@
                    Margin="5"
                    FontSize="15"
                    FontFamily="Consolas" />
+        
         <ListBox  Grid.Row="1"
                   Grid.Column="0"
                   ItemsSource="{Binding Threats, Mode=OneWay}"
                   FontSize="15"
-                  Margin="5"
+                  Margin="3"
                   VirtualizingStackPanel.IsVirtualizing="True"
                   VirtualizingStackPanel.VirtualizationMode="Recycling"
                   SelectedItem="{Binding SelectedThreat}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding IdentifierUBI}" />
+                    <TextBlock Text="{Binding Id}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Border Grid.Row="0"
+
+        <Border Grid.Row="1"
                 Grid.Column="1"
-                Grid.RowSpan="2"
-                Margin="5"
+                Grid.RowSpan="3"
+                Margin="3"
                 BorderBrush="Black"
                 BorderThickness="1">
             <ScrollViewer Visibility="{Binding SelectedThreat, Converter={StaticResource NullToVisibilityConverter}}">
@@ -116,5 +124,31 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
+        
+        <ProgressBar Grid.Row="2"
+                     Grid.Column="0"
+                     Margin="3"
+                     IsIndeterminate="{Binding IsIndeterminateProgressBar}"/>
+        
+        <Button Grid.Row="3"
+                Grid.Column="0"
+                Style="{StaticResource Button}"
+                Content="Обновить"
+                Command="{Binding Update}"/>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="2"
+                   Text="Ход выполнения:"
+                   Margin="5"
+                   FontSize="15"
+                   FontFamily="Consolas" />
+
+        <ScrollViewer Grid.Row="1"
+                      Grid.Column="2"
+                      Grid.RowSpan="3"
+                      Margin="3">
+            <TextBlock Text="{Binding Status}"
+                       FontSize="12" />
+        </ScrollViewer>
     </Grid>
 </UserControl>

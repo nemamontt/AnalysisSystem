@@ -1,4 +1,6 @@
-﻿namespace PragmaticAnalyzer.MVVM.Views
+﻿using PragmaticAnalyzer.MVVM.ViewModel;
+
+namespace PragmaticAnalyzer.MVVM.Views
 {
     public partial class SetView
     {

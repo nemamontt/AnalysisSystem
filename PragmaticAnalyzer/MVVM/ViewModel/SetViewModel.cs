@@ -1,15 +1,9 @@
-﻿using Common.Core;
-using Common.Databases;
-using Common.DTO;
-using Common.Enums.ForDatabase;
-using Common.Enums.ForSolution;
-using Microsoft.Win32;
-using PragmaticAnalyzer.Core;
-using PragmaticAnalyzer.MVVM.ViewModel.Viewer;
+﻿using PragmaticAnalyzer.Abstractions;
+using PragmaticAnalyzer.Configs;
+using PragmaticAnalyzer.Databases;
+using PragmaticAnalyzer.DTO;
+using PragmaticAnalyzer.Services;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Windows.Media;
 using ViewModels;
 
@@ -17,9 +11,14 @@ namespace PragmaticAnalyzer.MVVM.ViewModel
 {
     public class SetViewModel : ViewModelBase
     {
-        private readonly string settingPuth = Path.Combine(Environment.CurrentDirectory, "setting.json");
-        private readonly MessageService messageService;
-        public Paths PathsDatabases { get => Get<Paths>(); set => Set(value); }
+        private readonly IMessageService _messageService;
+        private readonly IDialogService _dialogService;
+        private readonly IFileService _fileService;
+        private readonly IViewModelsService _viewModelsService;
+
+        public Func<string, DataType, Task> UpdateConfig;
+        public ViewPath DisplayedPaths { get => Get<ViewPath>(); set => Set(value); }
+        public LastUpdateConfig LastUpdateConfig { get => Get<LastUpdateConfig>(); set => Set(value); }
         public Brush VulnerabilitieButtonBackground { get => Get<Brush>(); set => Set(value); }
         public Brush ThreatButtonBackground { get => Get<Brush>(); set => Set(value); }
         public Brush TacticButtonBackground { get => Get<Brush>(); set => Set(value); }
@@ -30,34 +29,16 @@ namespace PragmaticAnalyzer.MVVM.ViewModel
         public Brush CurrentStatusButtonBackground { get => Get<Brush>(); set => Set(value); }
         public Brush ReferenceStatusButtonBackground { get => Get<Brush>(); set => Set(value); }
         public Brush SpecialistButtonBackground { get => Get<Brush>(); set => Set(value); }
-        public VulViewModel VulVm { get; private set; }
-        public ThreatViewModel ThretVm { get; private set; }
-        public TacticViewModel TacticVm { get; private set; }
-        public ProtectionMeasureViewModel ProtectionMeasureVm { get; private set; }
-        public OutcomesViewModel OutcomesVm { get; private set; }
-        public ExploitViewModel ExploitVm { get; private set; }
-        public ViolatorViewModel ViolatorVm { get; private set; }
-        public SpecialistViewModel SpecialistVm { get; private set; }
-        public ReferenceStatusViewModel ReferenceStatusVm { get; private set; }
 
-
-        public SetViewModel(VulViewModel vulViewModel, ThreatViewModel threatViewModel, TacticViewModel tacticViewModel,
-                                            ProtectionMeasureViewModel protectionMeasureViewModel, OutcomesViewModel outcomesViewModel,
-                                            ExploitViewModel exploitViewModel, ViolatorViewModel violatorViewModel, SpecialistViewModel specialistVewModel, Paths pathsDatabases,
-                                            ReferenceStatusViewModel referenceStatusViewModel)
+        public SetViewModel(LastUpdateConfig lastUpdateConfig, IViewModelsService viewModelsService)
         {
-            PathsDatabases = pathsDatabases;
-            messageService = new();
-
-            VulVm = vulViewModel;
-            ThretVm = threatViewModel;
-            TacticVm = tacticViewModel;
-            ProtectionMeasureVm = protectionMeasureViewModel;
-            OutcomesVm = outcomesViewModel;
-            ExploitVm = exploitViewModel;
-            ViolatorVm = violatorViewModel;
-            SpecialistVm = specialistVewModel;
-            ReferenceStatusVm = referenceStatusViewModel;
+            LastUpdateConfig = lastUpdateConfig;
+            DisplayedPaths = new();
+            _messageService = new MessageService();
+            _dialogService = new DialogService();
+            _fileService = new FileService();
+            _viewModelsService = viewModelsService;
+            UpdateConfig += OnUpdateConfig;
 
             ThreatButtonBackground = Brushes.Red;
             VulnerabilitieButtonBackground = Brushes.Red;
@@ -69,295 +50,223 @@ namespace PragmaticAnalyzer.MVVM.ViewModel
             SpecialistButtonBackground = Brushes.Red;
             ReferenceStatusButtonBackground = Brushes.Red;
             CurrentStatusButtonBackground = Brushes.Red;
-
-            if (PathsDatabases.OutcomesPath is not null)
-            {
-                if (!LoadFile(PathsDatabases.OutcomesPath, "Outcomes"))
-                    PathsDatabases.OutcomesPath = null;
-            }
-            if (PathsDatabases.ProtectionMeasurePath is not null)
-            {
-                if (!LoadFile(PathsDatabases.ProtectionMeasurePath, "ProtectionMeasure"))
-                    PathsDatabases.ProtectionMeasurePath = null;
-            }
-            if (PathsDatabases.VulPath is not null)
-            {
-                if (!LoadFile(PathsDatabases.VulPath, "Vulnerabilitie"))
-                    PathsDatabases.VulPath = null;
-            }
-            if (PathsDatabases.TacticPath is not null)
-            {
-                if (!LoadFile(PathsDatabases.TacticPath, "Tactic"))
-                    PathsDatabases.TacticPath = null;
-            }
-            if (PathsDatabases.ThreatPath is not null)
-            {
-                if (!LoadFile(PathsDatabases.ThreatPath, "Threat"))
-                    PathsDatabases.ThreatPath = null;
-            }
-            if (PathsDatabases.ExploitPath is not null)
-            {
-                if (!LoadFile(PathsDatabases.ExploitPath, "Exploit"))
-                    PathsDatabases.ExploitPath = null;
-            }
-            if (PathsDatabases.ViolatorPath is not null)
-            {
-                if (!LoadFile(PathsDatabases.ViolatorPath, "Violator"))
-                    PathsDatabases.ViolatorPath = null;
-            }
-            if (PathsDatabases.SpecialistPath is not null)
-            {
-                if (!LoadFile(PathsDatabases.SpecialistPath, "Specialist"))
-                    PathsDatabases.SpecialistPath = null;
-            }
-            if (PathsDatabases.ReferenceStatusPath is not null)
-            {
-                if (!LoadFile(PathsDatabases.ReferenceStatusPath, "ReferenceStatus"))
-                    PathsDatabases.ReferenceStatusPath = null;
-            }
-            SaveFile();
-
-            //////////////////////////
-            Random rnd = new();
-            /* ViolatorSource violatorSource = (ViolatorSource)rnd.Next(1, 2);
-             ViolatorPotential violatorPotential = (ViolatorPotential)rnd.Next(1, 4);
-             ViolatorVm.Violators = [
-     new()
-      {
-         Id = rnd.Next(0, 999),
-         Source = violatorSource,
-         Potential = violatorPotential,
-          Target = "Финансовые учреждения в Северной Америке",
-          UsingTools = "Эксплойт вызывающий переполнение стекового буфера при обработке файлов расширения ThinApp",
-          PreviousAttacks ="Нет"
-      },
-      new()
-      {
-          Id = rnd.Next(0, 999),
-         Source = violatorSource,
-         Potential = violatorPotential,
-          Target = "Правительственные сети в Азии",
-          UsingTools = "Не известно",
-          PreviousAttacks ="Криптоботы для добычи Monero"
-      },
-      new()
-      {
-          Id = rnd.Next(0, 999),
-         Source = violatorSource,
-         Potential = violatorPotential,
-          Target = "Облачные инфраструктурные провайдеры",
-          UsingTools = "Атака на слабые пароли",
-          PreviousAttacks ="Эксплуатация чересчур разрешительных политик IAM"
-      },
-      new()
-      {
-          Id = rnd.Next(0, 999),
-         Source = violatorSource,
-         Potential = violatorPotential,
-          Target = "Критически важная инфраструктура в Европе",
-          UsingTools = "",
-          PreviousAttacks ="Нет"
-      },
-      new()
-      {
-          Id = rnd.Next(0, 999),
-         Source = violatorSource,
-         Potential = violatorPotential,
-          Target = "Медицинские базы данных в Южной Америке",
-          UsingTools = "Не известно",
-          PreviousAttacks ="Нет"
-      },
-  ];
-             SpecialistVm.Specialists = [
-     new()
-      {
-          NameOrgan = "в/ч55555",
-          NameHighestOrgan = "в/ч23462",
-          NameSubordinateOrgan = "в/ч63733",
-          StatusVulnerability = "Уязвимость выявлен",
-          ActionsTaken = "Производится переконфигурирование системы",
-          NameSoftware = "Kaspersky Endpoint Security для Windows 11.0.0.6499",
-          UsingMeasures =new() {ProtectionMeasureVm.ProtectionMeasures[5],
-          ProtectionMeasureVm.ProtectionMeasures[16]}
-
-      },
-      new()
-      {
-            NameOrgan = "в/ч12356",
-          NameHighestOrgan = "в/ч94632",
-          NameSubordinateOrgan = "в/ч11766",
-          StatusVulnerability = "Уязвимость выявлен",
-          ActionsTaken = "Производится анализ системы",
-          NameSoftware = "Kaspersky  Security Center для Windows 10.0.0.1",
-          UsingMeasures =new() {ProtectionMeasureVm.ProtectionMeasures[7],
-          ProtectionMeasureVm.ProtectionMeasures[13] }
-      },
-      new()
-      {
-           NameOrgan = "в/ч15864",
-          NameHighestOrgan = "в/ч15176",
-          NameSubordinateOrgan = "в/ч15762",
-          StatusVulnerability = "Уязвимость выявлен",
-          ActionsTaken = "Не приняты",
-          NameSoftware = "Kaspersky Endpoint Security для Linux 1.0.0.43",
-          UsingMeasures = new(){ProtectionMeasureVm.ProtectionMeasures[6],
-          ProtectionMeasureVm.ProtectionMeasures[14] }
-      },
-      new()
-      {
-            NameOrgan = "в/ч54682",
-          NameHighestOrgan = "в/ч28648",
-          NameSubordinateOrgan = "в/ч15784",
-          StatusVulnerability = "Уязвимость выявлен",
-          ActionsTaken = "Производится резервное копирование системы",
-          NameSoftware = "Kaspersky Security Centerдля Linux 1.0.3.5",
-          UsingMeasures =new() {ProtectionMeasureVm.ProtectionMeasures[4],
-          ProtectionMeasureVm.ProtectionMeasures[2] }
-      },
-      new()
-      {
-           NameOrgan = "в/ч25486",
-          NameHighestOrgan = "в/ч22824",
-          NameSubordinateOrgan = "в/ч54863",
-          StatusVulnerability = "Уязвимость выявлен",
-          ActionsTaken = "Не приняты",
-          NameSoftware = "Kaspersky Endpoint Security для Windows 11.0.0.6499",
-          UsingMeasures = new(){ProtectionMeasureVm.ProtectionMeasures[1],
-          ProtectionMeasureVm.ProtectionMeasures[12] }
-      },
-  ];*/
-
-          /*  ObservableCollection<ReferenceStatus> referenceStatus = [
-                new ReferenceStatus()
-                {
-                    NameSoftware = "Типовая инструкция по настройке Kaspersky Endpoint Security для Windows 11.0.0.6499 в ВС РФ, п. 116",
-                    ArrivalTime = DateTime.Now,
-                },
-                  new ReferenceStatus()
-                {
-                    NameSoftware = "Типовая инструкция по настройке Kaspersky Security Center для Windows 10.2.0.1 в ВС РФ, п. 112",
-                    ArrivalTime = DateTime.Now,
-                },
-                  new ReferenceStatus()
-                {
-                    NameSoftware = "Типовая инструкция по настройке Kaspersky Endpoint Security для Linux 3.2.0 в ВС РФ, п. 23",
-                    ArrivalTime = DateTime.Now,
-                },
-                ];*/
-
-           /* var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-            };
-            DTO<Violator> b = new()
-            {
-                Type = TypeDatabase.Violator,
-                Value = ViolatorVm.Violators
-            };
-            DTO<Specialist> c = new()
-            {
-                Type = TypeDatabase.Specialist,
-                Value = SpecialistVm.Specialists
-            };
-            DTO<ReferenceStatus> d = new()
-            {
-                Type = TypeDatabase.ReferenceStatus,
-                Value = referenceStatus
-            };
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "ReferenceStatus.json"), JsonSerializer.Serialize(d, options));*/
-            // File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "Violators.json"), JsonSerializer.Serialize(b, options));
-            //File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "Specialists.json"), JsonSerializer.Serialize(c, options));
         }
 
-        public RelayCommand Set => GetCommand(o =>
+        public RelayCommand Set => GetCommand(async o =>
         {
-            OpenFileDialog openFileDialog = new() { Filter = "Json files (*.json)|*.json" };
-            if (openFileDialog.ShowDialog() is not true) return;
-            try
+            var pathDto = _dialogService.OpenFileDialog(DialogService.JsonFilter);
+            if (pathDto is null) return;
+            var rawDto = await _fileService.LoadFileAsync<DTO<object>>(pathDto);
+            if (rawDto is null) return;
+
+            if (rawDto.DtoType is DataType.Threat)
             {
-                LoadFile(openFileDialog.FileName, (string)o);
-                SaveFile();
+                var threats = await _fileService.LoadDTOAsync<ObservableCollection<Threat>>(pathDto, DataType.Threat);
+                if (threats is null)
+                {
+                    return;
+                }
+                foreach (var threat in threats)
+                {
+                    _viewModelsService.ThreatVm.Threats.Add(threat);
+                }
+                await _fileService.SaveDTOAsync(threats, DataType.Threat, GlobalConfig.ThreatPath);
+                UpdateConfig?.Invoke(rawDto.DateCreation.ToString("f"), DataType.Threat);
             }
-            catch (Exception ex)
+            else if (rawDto.DtoType is DataType.ProtectionMeasures)
             {
-                messageService.ShowErrorMessage(ex.Message);
+                var protectionMeasures = await _fileService.LoadDTOAsync<ObservableCollection<ProtectionMeasure>>(pathDto, DataType.ProtectionMeasures);
+                if (protectionMeasures is null)
+                {
+                    return;
+                }
+                foreach (var protectionMeasure in protectionMeasures)
+                {
+                    _viewModelsService.ProtectionMeasureVm.ProtectionMeasures.Add(protectionMeasure);
+                }
+                await _fileService.SaveDTOAsync(protectionMeasures, DataType.ProtectionMeasures, GlobalConfig.ProtectionMeasurePath);
+                UpdateConfig?.Invoke(rawDto.DateCreation.ToString("f"), DataType.ProtectionMeasures);
+            }
+            else if (rawDto.DtoType is DataType.Tactic)
+            {
+                var techniquesTactics = await _fileService.LoadDTOAsync<ObservableCollection<Tactic>>(pathDto, DataType.Tactic);
+                if (techniquesTactics is null)
+                {
+                    return;
+                }
+                foreach (var techniquesTactic in techniquesTactics)
+                {
+                    _viewModelsService.TacticVm.Tactics.Add(techniquesTactic);
+                }
+                await _fileService.SaveDTOAsync(techniquesTactics, DataType.Tactic, GlobalConfig.TacticPath);
+                UpdateConfig?.Invoke(rawDto.DateCreation.ToString("f"), DataType.Tactic);
+            }
+            else if (rawDto.DtoType is DataType.Vulnerabilitie)
+            {
+                var vulnerabilities = await _fileService.LoadDTOAsync<ObservableCollection<Vulnerabilitie>>(pathDto, DataType.Vulnerabilitie);
+                if (vulnerabilities is null)
+                {
+                    return;
+                }
+                foreach (var vulnerabilitie in vulnerabilities)
+                {
+                    _viewModelsService.VulnerabilitieVm.Vulnerabilities.Add(vulnerabilitie);
+                }
+                await _fileService.SaveDTOAsync(vulnerabilities, DataType.Vulnerabilitie, GlobalConfig.VulPath);
+                UpdateConfig?.Invoke(rawDto.DateCreation.ToString("f"), DataType.Vulnerabilitie);
+            }
+            else if (rawDto.DtoType is DataType.Outcomes)
+            {
+                var outcomes = await _fileService.LoadDTOAsync<Outcomes>(pathDto, DataType.Outcomes);
+                if (outcomes is null)
+                {
+                    return;
+                }
+                foreach (var consequence in outcomes.Consequences)
+                {
+                    _viewModelsService.OutcomeVm.Outcomes.Consequences.Add(consequence);
+                }
+                foreach (var technology in outcomes.Technologys)
+                {
+                    _viewModelsService.OutcomeVm.Outcomes.Technologys.Add(technology);
+                }
+                await _fileService.SaveDTOAsync(outcomes, DataType.Outcomes, GlobalConfig.OutcomesPath);
+                UpdateConfig?.Invoke(rawDto.DateCreation.ToString("f"), DataType.Outcomes);
+            }
+            else if (rawDto.DtoType is DataType.Exploit)
+            {
+                var exploits = await _fileService.LoadDTOAsync<ObservableCollection<Exploit>>(pathDto, DataType.Exploit);
+                if (exploits is null)
+                {
+                    return;
+                }
+                foreach (var exploit in exploits)
+                {
+                    _viewModelsService.ExploitVm.Exploits.Add(exploit);
+                }
+                await _fileService.SaveDTOAsync(exploits, DataType.Exploit, GlobalConfig.ExploitPath);
+                UpdateConfig?.Invoke(rawDto.DateCreation.ToString("f"), DataType.Exploit);
+            }
+            else if (rawDto.DtoType is DataType.Violator)
+            {
+                var violators = await _fileService.LoadDTOAsync<ObservableCollection<Violator>>(pathDto, DataType.Violator);
+                if (violators is null)
+                {
+                    return;
+                }
+                foreach (var violator in violators)
+                {
+                    _viewModelsService.ViolatorVm.Violators.Add(violator);
+                }
+                await _fileService.SaveDTOAsync(violators, DataType.Violator, GlobalConfig.ViolatorPath);
+                UpdateConfig?.Invoke(rawDto.DateCreation.ToString("f"), DataType.Violator);
+            }
+            else if (rawDto.DtoType is DataType.Specialist)
+            {
+                var specialists = await _fileService.LoadDTOAsync<ObservableCollection<Specialist>>(pathDto, DataType.Specialist);
+                if (specialists is null)
+                {
+                    return;
+                }
+                foreach (var specialist in specialists)
+                {
+                    _viewModelsService.SpecialistVm.Specialists.Add(specialist);
+                }
+                await _fileService.SaveDTOAsync(specialists, DataType.Specialist, GlobalConfig.SpecialistPath);
+                UpdateConfig?.Invoke(rawDto.DateCreation.ToString("f"), DataType.Specialist);
+            }
+            else if (rawDto.DtoType is DataType.ReferenceStatus)
+            {
+                var referencesStatus = await _fileService.LoadDTOAsync<ObservableCollection<ReferenceStatus>>(pathDto, DataType.ReferenceStatus);
+                if (referencesStatus is null)
+                {
+                    return;
+                }
+                foreach (var referenceStatus in referencesStatus)
+                {
+                    _viewModelsService.ReferenceStatusVm.ReferencesStatus.Add(referenceStatus);
+                }
+                await _fileService.SaveDTOAsync(referencesStatus, DataType.ReferenceStatus, GlobalConfig.RefStatPath);
+                UpdateConfig?.Invoke(rawDto.DateCreation.ToString("f"), DataType.ReferenceStatus);
+            }
+            else if (rawDto.DtoType is DataType.CurrentStatus)
+            {
+                var currentsStatus = await _fileService.LoadDTOAsync<ObservableCollection<CurrentStatus>>(pathDto, DataType.CurrentStatus);
+                if (currentsStatus is null)
+                {
+                    return;
+                }
+                foreach (var currentStatus in currentsStatus)
+                {
+                    _viewModelsService.CurrentStatusVm.CurrentsStatus.Add(currentStatus);
+                }
+                await _fileService.SaveDTOAsync(currentsStatus, DataType.CurrentStatus, GlobalConfig.CurStatPath);
+                UpdateConfig?.Invoke(rawDto.DateCreation.ToString("f"), DataType.CurrentStatus);
             }
         });
 
-        private void SaveFile()
+        private async Task OnUpdateConfig(string updateTime, DataType type)
         {
-            var options = new JsonSerializerOptions
+            if (type is DataType.Vulnerabilitie)
             {
-                WriteIndented = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-            };
-            File.WriteAllText(settingPuth, JsonSerializer.Serialize(PathsDatabases, options));
-        }
-        private bool LoadFile(string puth, string nameDatabase)
-        {
-            if (!Path.Exists(puth))
-                return false;
-
-            var rawDto = JsonSerializer.Deserialize<DTO<object>>(File.ReadAllText(puth));
-            if (rawDto.Type is Common.Enums.ForSolution.FileType.Threat && nameDatabase is "Threat")
-            {
-                ThretVm.Threats = JsonSerializer.Deserialize<DTO<Threat>>(File.ReadAllText(puth)).Value;
-                PathsDatabases.ThreatPath = puth;
-                ThreatButtonBackground = Brushes.Green;
-            }
-            else if (rawDto.Type is Common.Enums.ForSolution.FileType.Vulnerabilitie && nameDatabase is "Vulnerabilitie")
-            {
-                VulVm.Vulnerabilities = JsonSerializer.Deserialize<DTO<Vulnerabilitie>>(File.ReadAllText(puth)).Value;
-                PathsDatabases.VulPath = puth;
                 VulnerabilitieButtonBackground = Brushes.Green;
+                LastUpdateConfig.Vulnerabilitie = updateTime;
+                DisplayedPaths.VulnerabilitiePath = GlobalConfig.VulPath;
             }
-            else if (rawDto.Type is Common.Enums.ForSolution.FileType.TechniquesTactics && nameDatabase is "Tactic")
+            else if (type is DataType.Threat)
             {
-                TacticVm.Tactics = JsonSerializer.Deserialize<DTO<Tactic>>(File.ReadAllText(puth)).Value;
-                PathsDatabases.TacticPath = puth;
-                TacticButtonBackground = Brushes.Green;
+                ThreatButtonBackground = Brushes.Green;
+                LastUpdateConfig.Threat = updateTime;
+                DisplayedPaths.ThreatPath = GlobalConfig.ThreatPath;
             }
-            else if (rawDto.Type is Common.Enums.ForSolution.FileType.ProtectionMeasures && nameDatabase is "ProtectionMeasure")
+            else if (type is DataType.ProtectionMeasures)
             {
-                ProtectionMeasureVm.ProtectionMeasures = JsonSerializer.Deserialize<DTO<ProtectionMeasure>>(File.ReadAllText(puth)).Value;
-                PathsDatabases.ProtectionMeasurePath = puth;
                 ProtectionMeasureButtonBackground = Brushes.Green;
+                LastUpdateConfig.ProtectionMeasure = updateTime;
+                DisplayedPaths.ProtectionMeasurePath = GlobalConfig.ProtectionMeasurePath;
             }
-            else if (rawDto.Type is Common.Enums.ForSolution.FileType.Outcomes && nameDatabase is "Outcomes")
+            else if (type is DataType.Tactic)
             {
-                OutcomesVm.Outcomes = JsonSerializer.Deserialize<DTO<Outcomes>>(File.ReadAllText(puth)).Value[0];
-                PathsDatabases.OutcomesPath = puth;
+                TacticButtonBackground = Brushes.Green;
+                LastUpdateConfig.Tactic = updateTime;
+                DisplayedPaths.TacticPath = GlobalConfig.TacticPath;
+            }
+            else if (type is DataType.Outcomes)
+            {
                 OutcomesButtonBackground = Brushes.Green;
+                LastUpdateConfig.Outcomes = updateTime;
+                DisplayedPaths.OutcomesPath = GlobalConfig.OutcomesPath;
             }
-            else if (rawDto.Type is Common.Enums.ForSolution.FileType.Exploit && nameDatabase is "Exploit")
+            else if (type is DataType.Exploit)
             {
-                ExploitVm.Exploits = JsonSerializer.Deserialize<DTO<Exploit>>(File.ReadAllText(puth)).Value;
-                PathsDatabases.ExploitPath = puth;
                 ExploitButtonBackground = Brushes.Green;
+                LastUpdateConfig.Exploit = updateTime;
+                DisplayedPaths.ExploitPath = GlobalConfig.ExploitPath;
             }
-            else if (rawDto.Type is Common.Enums.ForSolution.FileType.Violator && nameDatabase is "Violator")
+            else if (type is DataType.Violator)
             {
-                ViolatorVm.Violators = JsonSerializer.Deserialize<DTO<Violator>>(File.ReadAllText(puth)).Value;
-                PathsDatabases.ViolatorPath = puth;
                 ViolatorButtonBackground = Brushes.Green;
+                LastUpdateConfig.Violator = updateTime;
+                DisplayedPaths.ViolatorPath = GlobalConfig.ViolatorPath;
             }
-            else if (rawDto.Type is Common.Enums.ForSolution.FileType.Specialist && nameDatabase is "Specialist")
+            else if (type is DataType.Specialist)
             {
-                SpecialistVm.Specialists = JsonSerializer.Deserialize<DTO<Specialist>>(File.ReadAllText(puth)).Value;
-                PathsDatabases.SpecialistPath = puth;
                 SpecialistButtonBackground = Brushes.Green;
+                LastUpdateConfig.Specialist = updateTime;
+                DisplayedPaths.SpecialistPath = GlobalConfig.SpecialistPath;
             }
-            else if (rawDto.Type is Common.Enums.ForSolution.FileType.ReferenceStatus && nameDatabase is "ReferenceStatus")
+            else if (type is DataType.ReferenceStatus)
             {
-                ReferenceStatusVm.ReferencesStatus = JsonSerializer.Deserialize<DTO<ReferenceStatus>>(File.ReadAllText(puth)).Value;
-                PathsDatabases.ReferenceStatusPath = puth;
                 ReferenceStatusButtonBackground = Brushes.Green;
+                LastUpdateConfig.RefStatus = updateTime;
+                DisplayedPaths.RefStatusPath = GlobalConfig.RefStatPath;
             }
-            else
-                throw new InvalidOperationException($"Тип данных не соответсвует: {rawDto.Type}");
-
-            return true;
+            else if (type is DataType.CurrentStatus)
+            {
+                CurrentStatusButtonBackground = Brushes.Green;
+                LastUpdateConfig.CurStatus = updateTime;
+            }
+            await _fileService.SaveDTOAsync(LastUpdateConfig, DataType.LastUpdateConfig, GlobalConfig.LastUpdateConfig);
         }
     }
 }

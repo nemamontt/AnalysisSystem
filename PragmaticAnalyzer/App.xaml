@@ -4,6 +4,5 @@
              xmlns:vm="clr-namespace:PragmaticAnalyzer.MVVM.ViewModel"
              StartupUri="MVVM/Views/MainView.xaml">
     <Application.Resources>
-        <vm:MainViewModel x:Key="MVM" />
     </Application.Resources>
 </Application>

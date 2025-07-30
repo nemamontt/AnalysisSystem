@@ -1,9 +1,9 @@
 ﻿namespace PragmaticAnalyzer.MVVM.Views
 {
 
-    public partial class VulView
+    public partial class VulnerabilitieView
     {
-        public VulView()
+        public VulnerabilitieView()
         {
             InitializeComponent();
         }

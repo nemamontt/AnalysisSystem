@@ -12,13 +12,18 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -32,12 +37,12 @@
                    Text="База данных уязвимостей"
                    FontSize="15"
                    FontFamily="Consolas" />
-        <Border BorderBrush="Black"
-                BorderThickness="1"
-                Grid.Row="1"
+        <Border Grid.Row="1"
                 Grid.Column="0"
+                BorderBrush="Black"
+                BorderThickness="1"         
                 Margin="1">
-            <TextBlock Text="{Binding PathsDatabases.VulPath}"
+            <TextBlock Text="{Binding DisplayedPaths.VulnerabilitiePath}"
                        FontSize="20"
                        TextWrapping="Wrap" />
         </Border>
@@ -49,22 +54,32 @@
                 Command="{Binding Set}"
                 Background="{Binding VulnerabilitieButtonBackground}"
                 CommandParameter="Vulnerabilitie" />
+        <StackPanel Grid.Row="2"
+                    Grid.Column="0"
+                    Orientation="Horizontal">
+            <TextBlock Text="Дата изменения:"
+                       FontSize="12"
+                       FontFamily="Consolas" />
+            <TextBlock Text="{Binding LastUpdateConfig.Vulnerabilitie}"
+                       FontSize="12"
+                       FontFamily="Consolas" />
+        </StackPanel>
 
-        <TextBlock Grid.Row="2"
+        <TextBlock Grid.Row="3"
                    Grid.Column="0"
                    Text="База данных угроз"
                    FontSize="15"
                    FontFamily="Consolas" />
         <Border BorderBrush="Black"
                 BorderThickness="1"
-                Grid.Row="3"
+                Grid.Row="4"
                 Grid.Column="0"
                 Margin="1">
-            <TextBlock Text="{Binding PathsDatabases.ThreatPath}"
+            <TextBlock Text="{Binding DisplayedPaths.ThreatPath}"
                        FontSize="20"
                        TextWrapping="Wrap" />
         </Border>
-        <Button Grid.Row="3"
+        <Button Grid.Row="4"
                 Grid.Column="1"
                 Content="..."
                 Width="50"
@@ -72,33 +87,20 @@
                 Command="{Binding Set}"
                 Background="{Binding ThreatButtonBackground}"
                 CommandParameter="Threat" />
-
-        <TextBlock Grid.Row="4"
-                   Grid.Column="0"
-                   Text="База данных техник и тактик"
-                   FontSize="15"
-                   FontFamily="Consolas" />
-        <Border BorderBrush="Black"
-                BorderThickness="1"
-                Grid.Row="5"
-                Grid.Column="0"
-                Margin="1">
-            <TextBlock Text="{Binding PathsDatabases.TacticPath}"
-                       FontSize="20"
-                       TextWrapping="Wrap" />
-        </Border>
-        <Button Grid.Row="5"
-                Grid.Column="1"
-                Content="..."
-                Width="50"
-                Cursor="Hand"
-                Command="{Binding Set}"
-                Background="{Binding TacticButtonBackground}"
-                CommandParameter="Tactic" />
+        <StackPanel Grid.Row="5"
+                    Grid.Column="0"
+                    Orientation="Horizontal">
+            <TextBlock Text="Дата изменения:"
+                       FontSize="12"
+                       FontFamily="Consolas" />
+            <TextBlock Text="{Binding LastUpdateConfig.Threat}"
+                       FontSize="12"
+                       FontFamily="Consolas" />
+        </StackPanel>
 
         <TextBlock Grid.Row="6"
                    Grid.Column="0"
-                   Text="База данных мер защиты"
+                   Text="База данных техник и тактик"
                    FontSize="15"
                    FontFamily="Consolas" />
         <Border BorderBrush="Black"
@@ -106,7 +108,7 @@
                 Grid.Row="7"
                 Grid.Column="0"
                 Margin="1">
-            <TextBlock Text="{Binding PathsDatabases.ProtectionMeasurePath}"
+            <TextBlock Text="{Binding DisplayedPaths.TacticPath}"
                        FontSize="20"
                        TextWrapping="Wrap" />
         </Border>
@@ -116,24 +118,67 @@
                 Width="50"
                 Cursor="Hand"
                 Command="{Binding Set}"
+                Background="{Binding TacticButtonBackground}"
+                CommandParameter="Tactic" />
+        <StackPanel Grid.Row="8"
+                    Grid.Column="0"
+                    Orientation="Horizontal">
+            <TextBlock Text="Дата изменения:"
+                       FontSize="12"
+                       FontFamily="Consolas" />
+            <TextBlock Text="{Binding LastUpdateConfig.Tactic}"
+                       FontSize="12"
+                       FontFamily="Consolas" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="9"
+                   Grid.Column="0"
+                   Text="База данных мер защиты"
+                   FontSize="15"
+                   FontFamily="Consolas" />
+        <Border BorderBrush="Black"
+                BorderThickness="1"
+                Grid.Row="10"
+                Grid.Column="0"
+                Margin="1">
+            <TextBlock Text="{Binding DisplayedPaths.ProtectionMeasurePath}"
+                       FontSize="20"
+                       TextWrapping="Wrap" />
+        </Border>
+        <Button Grid.Row="10"
+                Grid.Column="1"
+                Content="..."
+                Width="50"
+                Cursor="Hand"
+                Command="{Binding Set}"
                 Background="{Binding ProtectionMeasureButtonBackground}"
                 CommandParameter="ProtectionMeasure" />
+        <StackPanel Grid.Row="11"
+                    Grid.Column="0"
+                    Orientation="Horizontal">
+            <TextBlock Text="Дата изменения:"
+                       FontSize="12"
+                       FontFamily="Consolas" />
+            <TextBlock Text="{Binding LastUpdateConfig.ProtectionMeasure}"
+                       FontSize="12"
+                       FontFamily="Consolas" />
+        </StackPanel>
 
-        <TextBlock Grid.Row="8"
+        <TextBlock Grid.Row="12"
                    Grid.Column="0"
                    Text="База данных рисков"
                    FontSize="15"
                    FontFamily="Consolas" />
         <Border BorderBrush="Black"
                 BorderThickness="1"
-                Grid.Row="9"
+                Grid.Row="13"
                 Grid.Column="0"
                 Margin="1">
-            <TextBlock Text="{Binding PathsDatabases.OutcomesPath}"
+            <TextBlock Text="{Binding DisplayedPaths.OutcomesPath}"
                        FontSize="20"
                        TextWrapping="Wrap" />
         </Border>
-        <Button Grid.Row="9"
+        <Button Grid.Row="13"
                 Grid.Column="1"
                 Content="..."
                 Width="50"
@@ -141,6 +186,16 @@
                 Command="{Binding Set}"
                 Background="{Binding OutcomesButtonBackground}"
                 CommandParameter="Outcomes" />
+        <StackPanel Grid.Row="14"
+                    Grid.Column="0"
+                    Orientation="Horizontal">
+            <TextBlock Text="Дата изменения:"
+                       FontSize="12"
+                       FontFamily="Consolas" />
+            <TextBlock Text="{Binding LastUpdateConfig.Outcomes}"
+                       FontSize="12"
+                       FontFamily="Consolas" />
+        </StackPanel>
 
         <TextBlock Grid.Row="0"
                    Grid.Column="2"
@@ -152,7 +207,7 @@
                 Grid.Row="1"
                 Grid.Column="2"
                 Margin="1">
-            <TextBlock Text="{Binding PathsDatabases.ExploitPath}"
+            <TextBlock Text="{Binding DisplayedPaths.ExploitPath}"
                        FontSize="20"
                        TextWrapping="Wrap" />
         </Border>
@@ -165,21 +220,21 @@
                 Background="{Binding ExploitButtonBackground}"
                 CommandParameter="Exploit" />
 
-        <TextBlock Grid.Row="2"
+        <TextBlock Grid.Row="3"
                    Grid.Column="2"
                    Text="База данных нарушителей"
                    FontSize="15"
                    FontFamily="Consolas" />
         <Border BorderBrush="Black"
                 BorderThickness="1"
-                Grid.Row="3"
+                Grid.Row="4"
                 Grid.Column="2"
                 Margin="1">
-            <TextBlock Text="{Binding PathsDatabases.ViolatorPath}"
+            <TextBlock Text="{Binding DisplayedPaths.ViolatorPath}"
                        FontSize="20"
                        TextWrapping="Wrap" />
         </Border>
-        <Button Grid.Row="3"
+        <Button Grid.Row="4"
                 Grid.Column="3"
                 Content="..."
                 Width="50"
@@ -188,32 +243,9 @@
                 Background="{Binding ViolatorButtonBackground}"
                 CommandParameter="Violator" />
 
-        <TextBlock Grid.Row="4"
-                   Grid.Column="2"
-                   Text="База данных спициалиста по ЗИ"
-                   FontSize="15"
-                   FontFamily="Consolas" />
-        <Border BorderBrush="Black"
-                BorderThickness="1"
-                Grid.Row="5"
-                Grid.Column="2"
-                Margin="1">
-            <TextBlock Text="{Binding PathsDatabases.SpecialistPath}"
-                       FontSize="20"
-                       TextWrapping="Wrap" />
-        </Border>
-        <Button Grid.Row="5"
-                Grid.Column="3"
-                Content="..."
-                Width="50"
-                Cursor="Hand"
-                Command="{Binding Set}"
-                Background="{Binding SpecialistButtonBackground}"
-                CommandParameter="Specialist" />
-
         <TextBlock Grid.Row="6"
                    Grid.Column="2"
-                   Text="База данных о текущем состоянии ПФ СОПКА"
+                   Text="База данных спициалиста по ЗИ"
                    FontSize="15"
                    FontFamily="Consolas" />
         <Border BorderBrush="Black"
@@ -221,7 +253,7 @@
                 Grid.Row="7"
                 Grid.Column="2"
                 Margin="1">
-            <TextBlock Text="{Binding PathsDatabases.CurrentStatusPath}"
+            <TextBlock Text="{Binding DisplayedPaths.SpecialistPath}"
                        FontSize="20"
                        TextWrapping="Wrap" />
         </Border>
@@ -231,24 +263,47 @@
                 Width="50"
                 Cursor="Hand"
                 Command="{Binding Set}"
+                Background="{Binding SpecialistButtonBackground}"
+                CommandParameter="Specialist" />
+
+        <TextBlock Grid.Row="9"
+                   Grid.Column="2"
+                   Text="База данных о текущем состоянии ПФ СОПКА"
+                   FontSize="15"
+                   FontFamily="Consolas" />
+        <Border BorderBrush="Black"
+                BorderThickness="1"
+                Grid.Row="10"
+                Grid.Column="2"
+                Margin="1">
+            <TextBlock Text="{Binding DisplayedPaths.CurStatusPath}"
+                       FontSize="20"
+                       TextWrapping="Wrap" />
+        </Border>
+        <Button Grid.Row="10"
+                Grid.Column="3"
+                Content="..."
+                Width="50"
+                Cursor="Hand"
+                Command="{Binding Set}"
                 Background="{Binding CurrentStatusButtonBackground}"
                 CommandParameter="CurrentStatus" />
 
-        <TextBlock Grid.Row="8"
+        <TextBlock Grid.Row="12"
                    Grid.Column="2"
                    Text="База данных об эталонном состоянии ПФ СОПКА"
                    FontSize="15"
                    FontFamily="Consolas" />
         <Border BorderBrush="Black"
                 BorderThickness="1"
-                Grid.Row="9"
+                Grid.Row="13"
                 Grid.Column="2"
                 Margin="1">
-            <TextBlock Text="{Binding PathsDatabases.ReferenceStatusPath}"
+            <TextBlock Text="{Binding DisplayedPaths.RefStatusPath}"
                        FontSize="20"
                        TextWrapping="Wrap" />
         </Border>
-        <Button Grid.Row="9"
+        <Button Grid.Row="13"
                 Grid.Column="3"
                 Content="..."
                 Width="50"

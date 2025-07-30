@@ -12,8 +12,7 @@
         Height="800"
         Width="1250"
         WindowStartupLocation="CenterScreen"
-        Title="Модуль работы с источниками знаний ИБ v 1.0.0"
-        DataContext="{DynamicResource MVM}">
+        Title="Модуль работы с источниками знаний ИБ v1.0.0">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.1*" />
@@ -33,25 +32,25 @@
                         Content="Загрузить БД"
                         Margin="2"
                         Command="{Binding SetCurrentView}"
-                        CommandParameter="{Binding SetVm}"
+                        CommandParameter="{Binding ViewModelsService.SetVm}"
                         Cursor="Hand"
                         Width="150"
                         FontFamily="Consolas"
                         FontSize="16" />
                 <Button Height="50"
-                        Content="Просмотреть БД"
+                        Content="Работа с БД"
                         Margin="2"
                         Command="{Binding SetCurrentView}"
-                        CommandParameter="{Binding ViewerVm}"
+                        CommandParameter="{Binding ViewModelsService.ViewerVm}"
                         Cursor="Hand"
                         Width="150"
                         FontFamily="Consolas"
                         FontSize="16" />
                 <Button Height="50"
-                        Content="Просмотреть онтологии"
+                        Content="Работа с онтологиями"
                         Margin="2"
                         Command="{Binding SetCurrentView}"
-                        CommandParameter="{Binding OntologyVm}"
+                        CommandParameter="{Binding ViewModelsService.OntologyVm}"
                         Cursor="Hand"
                         Width="200"
                         FontFamily="Consolas"
@@ -60,7 +59,7 @@
                         Content="Сформировать отчет"
                         Margin="2"
                         Command="{Binding SetCurrentView}"
-                        CommandParameter="{Binding ConnectionVm}"
+                        CommandParameter="{Binding ViewModelsService.ConnectionVm}"
                         Cursor="Hand"
                         Width="200"
                         FontFamily="Consolas"
@@ -69,7 +68,7 @@
                         Content="Информация"
                         Margin="2"
                         Command="{Binding SetCurrentView}"
-                        CommandParameter="{Binding HelpVm}"
+                        CommandParameter="{Binding ViewModelsService.HelpVm}"
                         Cursor="Hand"
                         Width="150"
                         FontFamily="Consolas"
@@ -96,8 +95,8 @@
                     <DataTemplate DataType="{x:Type vm:ConnectionViewModel}">
                         <view:ConnectionView />
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type subvm:VulViewModel}">
-                        <view:VulView />
+                    <DataTemplate DataType="{x:Type subvm:VulnerabilitieViewModel}">
+                        <view:VulnerabilitieView />
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type subvm:ThreatViewModel}">
                         <view:ThreatView />

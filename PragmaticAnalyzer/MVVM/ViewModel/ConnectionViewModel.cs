@@ -1,5 +1,5 @@
 ﻿using Common.Databases;
-using PragmaticAnalyzer.MVVM.ViewModel.Viewer;
+using PragmaticAnalyzer.Abstractions;
 using System.Collections.ObjectModel;
 using ViewModels;
 
@@ -7,34 +7,15 @@ namespace PragmaticAnalyzer.MVVM.ViewModel
 {
     public class ConnectionViewModel : ViewModelBase
     {
-        public VulViewModel vulVm;
-        public ThreatViewModel threatVm;
-        public TacticViewModel tacticVm;
-        public ProtectionMeasureViewModel protectionMeasureVm;
-        public OutcomesViewModel outcomesVm;
-        public ExploitViewModel exploitVm;
-        public ViolatorViewModel violatorVm;
-        public SpecialistViewModel specialistVm;
-        public ReferenceStatusViewModel referenceStatusVm;
-        public ObservableCollection<Report> Reports { get => Get<ObservableCollection<Report>>(); set => Set(value); }
-        public Report SelectedReport { get => Get<Report>(); set => Set(value); }
+        private readonly IViewModelsService _viewModelsService;
+        public ObservableCollection<Report> Reports { get; set; }
+        public Report? SelectedReport { get => Get<Report>(); set => Set(value); }
         public string RequestText { get => Get<string>(); set => Set(value); }
 
-        public ConnectionViewModel(VulViewModel vulViewModel, ThreatViewModel threatViewModel, TacticViewModel tacticViewModel,
-                                                          ProtectionMeasureViewModel protectionMeasureViewModel, OutcomesViewModel outcomesViewModel,
-                                                          ExploitViewModel exploitViewModel, ViolatorViewModel violatorViewModel, SpecialistViewModel specialistVewModel,
-                                                          ReferenceStatusViewModel referenceStatusViewModel)
+        public ConnectionViewModel(IViewModelsService viewModelsService)
         {
+            _viewModelsService = viewModelsService;
             Reports = [];
-            vulVm = vulViewModel;
-            threatVm = threatViewModel;
-            tacticVm = tacticViewModel;
-            protectionMeasureVm = protectionMeasureViewModel;
-            outcomesVm = outcomesViewModel;
-            exploitVm = exploitViewModel;
-            violatorVm = violatorViewModel;
-            specialistVm = specialistVewModel;
-            referenceStatusVm = referenceStatusViewModel;
         }
 
         public RelayCommand ShowReport => GetCommand(o =>
@@ -56,7 +37,7 @@ namespace PragmaticAnalyzer.MVVM.ViewModel
             foreach (var item in reports)
             {
                 int rnd = Random.Shared.Next(2, 5);
-                if (vulVm.Vulnerabilities is not null)
+             /*   if (vulVm.Vulnerabilities is not null)
                     item.Vulnerabilitie = vulVm.Vulnerabilities[rnd];
                 if (threatVm.Threats is not null)
                     item.Threat = threatVm.Threats[rnd];
@@ -75,7 +56,7 @@ namespace PragmaticAnalyzer.MVVM.ViewModel
                 if (specialistVm.Specialists is not null)
                     item.Specialist = specialistVm.Specialists[rnd];
                 if (referenceStatusVm.ReferencesStatus is not null)
-                    item.ReferenceStatus = referenceStatusVm.ReferencesStatus[1];
+                    item.ReferenceStatus = referenceStatusVm.ReferencesStatus[1];*/
             }
             return reports;
         }

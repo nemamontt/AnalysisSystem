@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>cardano_ada_crypto_icon_264376.ico</ApplicationIcon>
+    <ApplicationIcon>Images\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,11 +14,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="cardano_ada_crypto_icon_264376.ico" />
+    <Content Include="Images\icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MVVM\Model\" />
+    <Resource Include="Images\icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Styles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspose.Cells" Version="24.11.0" />
   </ItemGroup>
 
   <ItemGroup>
